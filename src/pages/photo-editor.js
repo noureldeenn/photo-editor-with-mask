@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import { useDropzone } from "react-dropzone";
 import usePanZoom from "use-pan-and-zoom";
@@ -6,6 +6,16 @@ import usePanZoom from "use-pan-and-zoom";
 import "../styles/photo-editor.scss";
 
 const PhotoEditor = () => {
+  const[x, setX] = useState(50);
+  const[y, setY] = useState(50);
+  useEffect(() => {
+   // eslint-disable-next-line no-restricted-globals
+   if (screen.width < 900) {
+     setX(200);
+     setY(200);
+   }
+  }, []);
+   
   const exportAsImage = async (el, imageFileName) => {
     // console.log(el)
     const canvas = await html2canvas(el);
@@ -43,9 +53,9 @@ const PhotoEditor = () => {
   const onDrop = useCallback(
     (droppedFiles) => {
       //
-      setPan({ x: 50, y: 80 });
+      setPan({ x: x, y: y });
     },
-    [setPan]
+    [setPan, x, y]
   );
 
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
